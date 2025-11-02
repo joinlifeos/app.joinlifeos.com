@@ -1,70 +1,36 @@
-# SmartCapture
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Take a screenshot of any event and automatically add it to your calendar. That's it.
+## Getting Started
 
-## What it does
+First, run the development server:
 
-You know when you screenshot an event poster or Instagram story and forget about it? This fixes that. Upload the screenshot, and it'll pull out the event details (title, date, time, location) and generate a calendar file you can import anywhere.
-
-Works with:
-- Event posters and flyers
-- Instagram/Facebook event posts  
-- Meeting invites from emails
-- Conference schedules
-- Pretty much any image with event info
-
-## Setup
-
-You'll need an OpenAI API key. Get one at [platform.openai.com/api-keys](https://platform.openai.com/api-keys).
-
-Then just:
 ```bash
-git clone <your-repo>
-cd smartCapture
-python3 -m http.server 8000
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Open `localhost:8000`, paste your API key, and you're good to go.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Or just open `index.html` directly in your browser if you don't care about the dev server.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## How to use
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-1. Upload/paste a screenshot
-2. Click "Extract Event Details"
-3. Review what it found (edit if needed)
-4. Download the .ics file
-5. Import to your calendar app
+## Learn More
 
-The .ics files work with Google Calendar, Apple Calendar, Outlook, whatever.
+To learn more about Next.js, take a look at the following resources:
 
-## Tech
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- Vanilla JS (no frameworks, keeping it simple)
-- OpenAI GPT-4o Vision API for the image analysis
-- Standard iCalendar format for the output
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Privacy stuff
+## Deploy on Vercel
 
-Your API key stays in your browser's localStorage. Images go straight to OpenAI's API over HTTPS. Nothing touches our servers because there are no servers.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## Costs
-
-About half a cent per image analysis through OpenAI. Check their current pricing at [openai.com/pricing](https://openai.com/pricing).
-
-## Common issues
-
-**Clipboard paste doesn't work**: Your browser might need HTTPS for clipboard access. Just use the file upload button instead.
-
-**API errors**: Make sure your key is valid and you have credits in your OpenAI account.
-
-**Bad extraction**: Try a clearer image, or just manually edit the fields after extraction.
-
-## Contributing
-
-PRs welcome. Keep it simple.
-
-## License
-
-MIT
-
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
