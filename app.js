@@ -1,12 +1,22 @@
 let currentImage = null;
 let apiKey = localStorage.getItem('openai_api_key') || '';
+let settings = {
+    provider: localStorage.getItem('provider') || 'openai',
+    openrouterKey: localStorage.getItem('openrouter_key') || '',
+    model: localStorage.getItem('model') || 'anthropic/claude-3.5-sonnet'
+};
 
 const $ = id => document.getElementById(id);
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Check API key based on provider
     const apiKeySection = $('apiKeySection');
-    if (!apiKey && apiKeySection) {
-        apiKeySection.classList.remove('hidden');
+    const hasApiKey = settings.provider === 'openai' 
+        ? apiKey 
+        : settings.openrouterKey;
+    
+    if (!hasApiKey && apiKeySection) {
+        showApiKeyModal(settings.provider);
     }
     
     const browseBtn = $('browseBtn');
@@ -53,6 +63,69 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveApiKeyBtn) {
         saveApiKeyBtn.onclick = saveApiKey;
     }
+    
+    // Settings handlers
+    const settingsBtn = $('settingsBtn');
+    const settingsSection = $('settingsSection');
+    const closeSettingsBtn = $('closeSettingsBtn');
+    const cancelSettingsBtn = $('cancelSettingsBtn');
+    const saveSettingsBtn = $('saveSettingsBtn');
+    const providerSelect = $('providerSelect');
+    const manageOpenAIKeyBtn = $('manageOpenAIKeyBtn');
+    const cancelApiKeyBtn = $('cancelApiKeyBtn');
+    
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Settings button clicked');
+            console.log('Settings section element:', settingsSection);
+            
+            // Load settings into UI first
+            loadSettingsIntoUI();
+            
+            // Show the modal
+            if (settingsSection) {
+                settingsSection.classList.remove('hidden');
+                console.log('Settings modal should be visible now');
+                console.log('Modal classes:', settingsSection.className);
+            } else {
+                console.error('Settings section element not found!');
+                alert('Settings section not found. Please refresh the page.');
+            }
+        });
+        
+        console.log('Settings button handler attached');
+    } else {
+        console.error('Settings button not found!');
+    }
+    if (closeSettingsBtn) {
+        closeSettingsBtn.onclick = closeSettings;
+    }
+    if (cancelSettingsBtn) {
+        cancelSettingsBtn.onclick = closeSettings;
+    }
+    if (saveSettingsBtn) {
+        saveSettingsBtn.onclick = saveSettings;
+    }
+    if (providerSelect) {
+        providerSelect.onchange = updateProviderUI;
+    }
+    if (manageOpenAIKeyBtn) {
+        manageOpenAIKeyBtn.onclick = () => {
+            if (settingsSection) settingsSection.classList.add('hidden');
+            showApiKeyModal('openai');
+        };
+    }
+    if (cancelApiKeyBtn) {
+        cancelApiKeyBtn.onclick = () => {
+            const apiKeySection = $('apiKeySection');
+            if (apiKeySection) apiKeySection.classList.add('hidden');
+        };
+    }
+    
+    // Initialize UI
+    updateProviderUI();
 });
 
 function handleFileSelect(e) {
@@ -130,12 +203,130 @@ function resetAll() {
     if (eventForm) eventForm.reset();
 }
 
+// Settings management functions
+function loadSettingsIntoUI() {
+    const providerSelect = $('providerSelect');
+    const openrouterKeyInput = $('openrouterKeyInput');
+    const modelSelect = $('modelSelect');
+    
+    if (providerSelect) providerSelect.value = settings.provider;
+    if (openrouterKeyInput) openrouterKeyInput.value = settings.openrouterKey;
+    if (modelSelect) modelSelect.value = settings.model;
+    
+    updateProviderUI();
+}
+
+function updateProviderUI() {
+    const providerSelect = $('providerSelect');
+    const openaiSettings = $('openaiSettings');
+    const openrouterSettings = $('openrouterSettings');
+    
+    if (!providerSelect) return;
+    
+    const provider = providerSelect.value;
+    if (provider === 'openai') {
+        if (openaiSettings) openaiSettings.classList.remove('hidden');
+        if (openrouterSettings) openrouterSettings.classList.add('hidden');
+    } else {
+        if (openaiSettings) openaiSettings.classList.add('hidden');
+        if (openrouterSettings) openrouterSettings.classList.remove('hidden');
+    }
+}
+
+function saveSettings() {
+    const providerSelect = $('providerSelect');
+    const openrouterKeyInput = $('openrouterKeyInput');
+    const modelSelect = $('modelSelect');
+    
+    if (providerSelect) {
+        const newProvider = providerSelect.value;
+        settings.provider = newProvider;
+        localStorage.setItem('provider', newProvider);
+    }
+    
+    if (openrouterKeyInput) {
+        const key = openrouterKeyInput.value.trim();
+        if (key) {
+            settings.openrouterKey = key;
+            localStorage.setItem('openrouter_key', key);
+            console.log('Saved OpenRouter key from settings (length:', key.length, ')');
+        } else if (settings.provider === 'openrouter' && !settings.openrouterKey) {
+            // If OpenRouter is selected but no key, warn user
+            toast('OpenRouter API key is required', 'error');
+            return;
+        }
+    }
+    
+    if (modelSelect) {
+        settings.model = modelSelect.value;
+        localStorage.setItem('model', settings.model);
+    }
+    
+    // Validate that if OpenRouter is selected, key is provided
+    if (settings.provider === 'openrouter' && !settings.openrouterKey) {
+        toast('OpenRouter API key is required', 'error');
+        return;
+    }
+    
+    closeSettings();
+    toast('Settings saved', 'success');
+    
+    // Refresh UI if needed
+    updateProviderUI();
+}
+
+function closeSettings() {
+    const settingsSection = $('settingsSection');
+    if (settingsSection) settingsSection.classList.add('hidden');
+}
+
+function showApiKeyModal(providerType) {
+    const apiKeySection = $('apiKeySection');
+    const apiKeyInput = $('apiKeyInput');
+    const apiKeyPromptText = $('apiKeyPromptText');
+    const apiKeyNote = $('apiKeyNote');
+    const apiKeyLink = $('apiKeyLink');
+    
+    if (!apiKeySection || !apiKeyInput) return;
+    
+    if (providerType === 'openai') {
+        if (apiKeyPromptText) apiKeyPromptText.textContent = 'To extract event details from images, please enter your OpenAI API key. Your key will be stored locally in your browser.';
+        if (apiKeyInput) apiKeyInput.placeholder = 'sk-...';
+        if (apiKeyLink) {
+            apiKeyLink.textContent = 'OpenAI Platform';
+            apiKeyLink.href = 'https://platform.openai.com/api-keys';
+        }
+    } else {
+        if (apiKeyPromptText) apiKeyPromptText.textContent = 'Please enter your OpenRouter API key. Your key will be stored locally in your browser.';
+        if (apiKeyInput) apiKeyInput.placeholder = 'sk-or-...';
+        if (apiKeyLink) {
+            apiKeyLink.textContent = 'OpenRouter';
+            apiKeyLink.href = 'https://openrouter.ai/keys';
+        }
+    }
+    
+    apiKeySection.classList.remove('hidden');
+}
+
 async function analyzeImage() {
     if (!currentImage) return toast('Upload an image first', 'error');
-    if (!apiKey) {
-        const apiKeySection = $('apiKeySection');
-        if (apiKeySection) apiKeySection.classList.remove('hidden');
-        return toast('Need API key', 'error');
+    
+    // Check API key based on provider
+    if (settings.provider === 'openai') {
+        if (!apiKey) {
+            showApiKeyModal('openai');
+            return toast('Need OpenAI API key', 'error');
+        }
+    } else {
+        if (!settings.openrouterKey || settings.openrouterKey.trim() === '') {
+            showApiKeyModal('openrouter');
+            return toast('Need OpenRouter API key. Go to Settings (⚙️) to configure.', 'error');
+        }
+        
+        // Debug: Log provider and key status (key length only for security)
+        console.log('Using OpenRouter provider');
+        console.log('Model:', settings.model);
+        console.log('Key length:', settings.openrouterKey.length);
     }
 
     const analyzeBtn = $('analyzeBtn');
@@ -183,36 +374,34 @@ async function analyzeImage() {
         promptText += `Format: {"title": "...", "host": "...", "date": "YYYY-MM-DD", "time": "HH:MM", "endDate": "...", "endTime": "...", "location": "...", "description": "..."}\n\n`;
         promptText += `IMPORTANT: Do NOT leave host as empty string if you can see any host information in the image or text. Extract names, handles, or organization names that appear to be hosting the event.`;
 
-        const res = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'gpt-4o',
-                messages: [
-                    {
-                        role: 'system',
-                        content: 'You are an expert at extracting structured event data from images. You MUST identify the host/organizer. Output must be raw JSON only, no markdown, no code fences. Always extract host information if it is visible in any form.'
-                    },
-                    {
-                        role: 'user',
-                        content: [
-                            { type: 'text', text: promptText },
-                            { type: 'image_url', image_url: { url: currentImage } }
-                        ]
-                    }
-                ],
-                max_tokens: 1000,
-                temperature: 0.3
-            })
-        });
+        // Make API call based on provider
+        const res = await callVisionAPI(promptText, currentImage);
 
-        if (!res.ok) throw new Error((await res.json()).error?.message || 'API error');
+        if (!res.ok) {
+            let errorMsg = 'API error';
+            try {
+                const errorData = await res.json();
+                errorMsg = errorData.error?.message || errorData.error || errorData.message || JSON.stringify(errorData) || 'API error';
+                console.error('API Error Response:', errorData);
+            } catch (e) {
+                console.error('Failed to parse error response:', e);
+                errorMsg = `HTTP ${res.status}: ${res.statusText}`;
+            }
+            throw new Error(errorMsg);
+        }
 
         const data = await res.json();
-        let content = data.choices[0].message.content;
+        
+        // Parse response - handle both OpenAI and OpenRouter formats
+        let content;
+        if (settings.provider === 'openrouter') {
+            // OpenRouter format
+            content = data.choices?.[0]?.message?.content || data.content || '';
+        } else {
+            // OpenAI format
+            content = data.choices[0].message.content;
+        }
+        
         const jsonMatch = content.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/);
         if (jsonMatch) content = jsonMatch[1];
         
@@ -447,11 +636,116 @@ function saveApiKey() {
     const key = apiKeyInput.value.trim();
     if (!key) return toast('Enter a valid API key', 'error');
     
-    apiKey = key;
-    localStorage.setItem('openai_api_key', key);
+    // Determine which provider based on key format or current settings
+    // OpenRouter keys typically start with 'sk-or-' but can have various formats
+    // Check if the modal was shown for OpenRouter context
+    const apiKeyPromptText = $('apiKeyPromptText');
+    const isOpenRouterModal = apiKeyPromptText && apiKeyPromptText.textContent.includes('OpenRouter');
+    const isOpenRouterKey = key.startsWith('sk-or-') || key.startsWith('sk_live_') || key.includes('openrouter');
+    
+    // Check if we're in OpenRouter context (settings, modal, or key format)
+    const isOpenRouterContext = settings.provider === 'openrouter' || isOpenRouterModal || isOpenRouterKey;
+    
+    if (isOpenRouterContext) {
+        settings.openrouterKey = key;
+        localStorage.setItem('openrouter_key', key);
+        
+        console.log('Saved OpenRouter key (length:', key.length, ')');
+        
+        // If using OpenRouter key, also update provider if not set
+        if (settings.provider !== 'openrouter') {
+            settings.provider = 'openrouter';
+            localStorage.setItem('provider', 'openrouter');
+            console.log('Updated provider to OpenRouter');
+            // Update settings UI if it exists
+            const providerSelect = $('providerSelect');
+            if (providerSelect) providerSelect.value = 'openrouter';
+            updateProviderUI();
+        }
+        
+        toast('OpenRouter API key saved', 'success');
+    } else {
+        apiKey = key;
+        localStorage.setItem('openai_api_key', key);
+        toast('OpenAI API key saved', 'success');
+    }
+    
+    // Clear the input
+    apiKeyInput.value = '';
+    
     const apiKeySection = $('apiKeySection');
     if (apiKeySection) apiKeySection.classList.add('hidden');
-    toast('API key saved', 'success');
+}
+
+// API call function that handles both OpenAI and OpenRouter
+async function callVisionAPI(promptText, imageDataUrl) {
+    const systemPrompt = 'You are an expert at extracting structured event data from images. You MUST identify the host/organizer. Output must be raw JSON only, no markdown, no code fences. Always extract host information if it is visible in any form.';
+    
+    if (settings.provider === 'openrouter') {
+        // OpenRouter API call
+        const base64Data = imageDataUrl.split(',')[1];
+        const mimeType = imageDataUrl.match(/data:(.*);base64/)?.[1] || 'image/jpeg';
+        
+        return fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${settings.openrouterKey}`,
+                'HTTP-Referer': window.location.origin,
+                'X-Title': 'SmartCapture Event Extractor'
+            },
+            body: JSON.stringify({
+                model: settings.model,
+                messages: [
+                    {
+                        role: 'system',
+                        content: systemPrompt
+                    },
+                    {
+                        role: 'user',
+                        content: [
+                            { type: 'text', text: promptText },
+                            {
+                                type: 'image_url',
+                                image_url: {
+                                    url: imageDataUrl
+                                }
+                            }
+                        ]
+                    }
+                ],
+                max_tokens: 1000,
+                temperature: 0.3
+            })
+        });
+    } else {
+        // OpenAI API call
+        return fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o',
+                messages: [
+                    {
+                        role: 'system',
+                        content: systemPrompt
+                    },
+                    {
+                        role: 'user',
+                        content: [
+                            { type: 'text', text: promptText },
+                            { type: 'image_url', image_url: { url: imageDataUrl } }
+                        ]
+                    }
+                ],
+                max_tokens: 1000,
+                temperature: 0.3
+            })
+        });
+    }
 }
 
 function toast(msg, type = 'success') {
