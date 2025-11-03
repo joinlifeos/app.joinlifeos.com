@@ -313,7 +313,7 @@ async function analyzeImage() {
     
     // Check API key based on provider
     if (settings.provider === 'openai') {
-        if (!apiKey) {
+    if (!apiKey) {
             showApiKeyModal('openai');
             return toast('Need OpenAI API key', 'error');
         }
@@ -321,8 +321,8 @@ async function analyzeImage() {
         if (!settings.openrouterKey || settings.openrouterKey.trim() === '') {
             showApiKeyModal('openrouter');
             return toast('Need OpenRouter API key. Go to Settings (⚙️) to configure.', 'error');
-        }
-        
+    }
+
         // Debug: Log provider and key status (key length only for security)
         console.log('Using OpenRouter provider');
         console.log('Model:', settings.model);
@@ -507,10 +507,10 @@ function generateICS(event) {
     const end = event.endTime 
         ? new Date(`${event.endDate}T${event.endTime}`)
         : new Date(start.getTime() + 3600000);
-
+    
     const fmt = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
     const esc = s => s.replace(/\\/g, '\\\\').replace(/,/g, '\\,').replace(/;/g, '\\;').replace(/\n/g, '\\n');
-
+    
     const ics = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
@@ -531,7 +531,7 @@ function generateICS(event) {
         'END:VEVENT',
         'END:VCALENDAR'
     ].filter(Boolean).join('\r\n');
-
+    
     const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -665,8 +665,8 @@ function saveApiKey() {
         
         toast('OpenRouter API key saved', 'success');
     } else {
-        apiKey = key;
-        localStorage.setItem('openai_api_key', key);
+    apiKey = key;
+    localStorage.setItem('openai_api_key', key);
         toast('OpenAI API key saved', 'success');
     }
     

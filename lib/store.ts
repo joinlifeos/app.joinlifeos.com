@@ -2,7 +2,12 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { AppSettings, EventData } from './types';
+import type { AppSettings, ExtractedResult } from './types';
+
+interface ServiceAuth {
+  accessToken: string;
+  expiresAt: number;
+}
 
 interface AppState {
   // Image state
@@ -13,10 +18,20 @@ interface AppState {
   settings: AppSettings;
   updateSettings: (settings: Partial<AppSettings>) => void;
 
-  // Event data state
-  eventData: Partial<EventData> | null;
-  setEventData: (data: Partial<EventData>) => void;
-  resetEventData: () => void;
+  // Extracted data state (replaces eventData)
+  extractedData: ExtractedResult | null;
+  setExtractedData: (data: ExtractedResult) => void;
+  resetExtractedData: () => void;
+
+  // Service authentication states
+  spotifyAuth: ServiceAuth | null;
+  setSpotifyAuth: (auth: ServiceAuth | null) => void;
+  youtubeAuth: ServiceAuth | null;
+  setYouTubeAuth: (auth: ServiceAuth | null) => void;
+  raindropAuth: ServiceAuth | null;
+  setRaindropAuth: (auth: ServiceAuth | null) => void;
+  googleMapsAuth: ServiceAuth | null;
+  setGoogleMapsAuth: (auth: ServiceAuth | null) => void;
 
   // UI state
   isLoading: boolean;
@@ -44,9 +59,19 @@ export const useAppStore = create<AppState>()(
           settings: { ...state.settings, ...newSettings },
         })),
 
-      eventData: null,
-      setEventData: (data) => set({ eventData: data }),
-      resetEventData: () => set({ eventData: null }),
+      extractedData: null,
+      setExtractedData: (data) => set({ extractedData: data }),
+      resetExtractedData: () => set({ extractedData: null }),
+
+      // Service auth states
+      spotifyAuth: null,
+      setSpotifyAuth: (auth) => set({ spotifyAuth: auth }),
+      youtubeAuth: null,
+      setYouTubeAuth: (auth) => set({ youtubeAuth: auth }),
+      raindropAuth: null,
+      setRaindropAuth: (auth) => set({ raindropAuth: auth }),
+      googleMapsAuth: null,
+      setGoogleMapsAuth: (auth) => set({ googleMapsAuth: auth }),
 
       isLoading: false,
       setIsLoading: (loading) => set({ isLoading: loading }),
@@ -60,7 +85,11 @@ export const useAppStore = create<AppState>()(
       storage: typeof window !== 'undefined' ? createJSONStorage(() => localStorage) : undefined,
       partialize: (state) => ({
         settings: state.settings,
-        eventData: state.eventData,
+        extractedData: state.extractedData,
+        spotifyAuth: state.spotifyAuth,
+        youtubeAuth: state.youtubeAuth,
+        raindropAuth: state.raindropAuth,
+        googleMapsAuth: state.googleMapsAuth,
       }),
     }
   )

@@ -134,19 +134,13 @@ export function SettingsModal() {
                     <option value="anthropic/claude-3-opus">
                       Claude 3 Opus
                     </option>
-                    <option value="anthropic/claude-3-sonnet">
-                      Claude 3 Sonnet
-                    </option>
                     <option value="anthropic/claude-3-haiku">
                       Claude 3 Haiku (Fast)
                     </option>
                   </optgroup>
                   <optgroup label="Gemini (Google)">
-                    <option value="google/gemini-pro-vision">
-                      Gemini Pro Vision
-                    </option>
-                    <option value="google/gemini-flash-1.5">
-                      Gemini Flash 1.5 (Fast & Cheap)
+                    <option value="google/gemini-2.5-flash">
+                      Gemini 2.5 Flash
                     </option>
                   </optgroup>
                   <optgroup label="GPT (OpenAI)">

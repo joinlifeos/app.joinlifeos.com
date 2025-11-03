@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OAuth Redirect URI Test</title>
+</head>
+<body>
+  <h1>OAuth Redirect URI Diagnostic</h1>
+  <p>Open this file and check the console output below.</p>
+  <div id="output"></div>
+  <script>
+    const output = document.getElementById('output');
+    const origin = window.location.origin;
+    const port = window.location.port || 'default';
+    
+    const redirectURIs = {
+      'Spotify': `${origin}/api/auth/spotify/callback`,
+      'YouTube': `${origin}/api/auth/youtube/callback`,
+      'Google Calendar': `${origin}/api/auth/google/callback`,
+      'Raindrop': `${origin}/api/auth/raindrop/callback`
+    };
+    
+    output.innerHTML = `
+      <h2>Current Location Info:</h2>
+      <p><strong>Origin:</strong> ${origin}</p>
+      <p><strong>Port:</strong> ${port}</p>
+      <p><strong>Full URL:</strong> ${window.location.href}</p>
+      
+      <h2>Redirect URIs Being Used:</h2>
+      <ul>
+        ${Object.entries(redirectURIs).map(([service, uri]) => 
+          `<li><strong>${service}:</strong> <code>${uri}</code></li>`
+        ).join('')}
+      </ul>
+      
+      <h2>Instructions:</h2>
+      <ol>
+        <li>Copy each redirect URI above</li>
+        <li>Paste them EXACTLY into your OAuth app settings</li>
+        <li>Make sure there are NO differences (including port, protocol, trailing slashes)</li>
+      </ol>
+    `;
+    
+    console.log('=== OAuth Redirect URI Diagnostic ===');
+    console.log('Origin:', origin);
+    console.log('Port:', port);
+    console.log('Redirect URIs:', redirectURIs);
+  </script>
+</body>
+</html>
+

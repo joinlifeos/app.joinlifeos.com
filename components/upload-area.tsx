@@ -87,7 +87,7 @@ export function UploadArea() {
     >
       <input {...getInputProps()} />
       <Upload className="mx-auto mb-4 h-16 w-16 text-primary" />
-      <h2 className="text-2xl font-semibold mb-2">Upload Event Screenshot</h2>
+      <h2 className="text-2xl font-semibold mb-2">Upload Screenshot</h2>
       <p className="text-muted-foreground mb-6">
         Drag & drop an image or click to browse
       </p>

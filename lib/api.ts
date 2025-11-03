@@ -1,5 +1,64 @@
-import type { EventData, AppSettings } from './types';
+import type { EventData, AppSettings, ExtractedResult, ScreenshotType, ExtractedData } from './types';
+import { classifyScreenshotType } from './classifier';
+import { extractEventData } from './extractors/event-extractor';
+import { extractSongData } from './extractors/song-extractor';
+import { extractVideoData } from './extractors/video-extractor';
+import { extractRestaurantData } from './extractors/restaurant-extractor';
+import { extractLinkData } from './extractors/link-extractor';
+import { extractSocialPostData } from './extractors/social-extractor';
 
+/**
+ * Generic extraction function that classifies the screenshot type
+ * and extracts data using the appropriate extractor
+ */
+export async function extractFromImage(
+  imageDataUrl: string,
+  settings: AppSettings
+): Promise<ExtractedResult> {
+  // Extract OCR text first
+  const ocrText = await extractTextWithOCR(imageDataUrl);
+
+  // Classify the screenshot type
+  const classification = await classifyScreenshotType(imageDataUrl, ocrText, settings);
+
+  // Route to appropriate extractor based on type
+  let data: ExtractedData;
+
+  switch (classification.type) {
+    case 'event':
+      data = await extractEventData(imageDataUrl, ocrText, settings);
+      break;
+    case 'song':
+      data = await extractSongData(imageDataUrl, ocrText, settings);
+      break;
+    case 'video':
+      data = await extractVideoData(imageDataUrl, ocrText, settings);
+      break;
+    case 'restaurant':
+      data = await extractRestaurantData(imageDataUrl, ocrText, settings);
+      break;
+    case 'link':
+      data = await extractLinkData(imageDataUrl, ocrText, settings);
+      break;
+    case 'social_post':
+      data = await extractSocialPostData(imageDataUrl, ocrText, settings);
+      break;
+    default:
+      // Fallback to link if unknown type
+      data = await extractLinkData(imageDataUrl, ocrText, settings);
+  }
+
+  return {
+    type: classification.type,
+    data,
+    confidence: classification.confidence,
+  };
+}
+
+/**
+ * Legacy function for backward compatibility
+ * @deprecated Use extractFromImage() instead
+ */
 export async function extractEventFromImage(
   imageDataUrl: string,
   promptText: string,
