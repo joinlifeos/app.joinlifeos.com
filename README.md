@@ -1,36 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# SmartCapture
 
-First, run the development server:
+Turn screenshots into actionable items instantly — events to calendar, songs to playlists, videos to YouTube, restaurants to maps, links to bookmarks, and more.
+
+</div>
+
+## Overview
+
+SmartCapture is a Next.js app that classifies a screenshot (event, song, video, restaurant, link, social post), extracts structured data using OCR + AI, and offers one‑click actions:
+
+- Add events to Google Calendar or download ICS
+- Add songs to a Spotify playlist named "SmartCapture" or open in Apple Music
+- Add videos to a YouTube playlist named "SmartCapture"
+- Save restaurants to Google Maps (opens place/search URL)
+- Save links/social posts to Raindrop or export a bookmark HTML
+
+## Tech Stack
+
+- Next.js App Router, TypeScript, Tailwind
+- Zustand (client state)
+- Tesseract.js (OCR)
+- OpenAI/OpenRouter (vision models)
+- Google Calendar, Spotify, YouTube, Raindrop, Google Maps/Places APIs
+
+## Quick Start
+
+1) Install deps and run dev server
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+On first launch you’ll see a modal to set your AI provider and API keys, and to connect integrations.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+Create `.env.local` in the project root. Common variables:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# AI
+NEXT_PUBLIC_OPENAI_API_KEY= # if using OpenAI directly (optional)
+NEXT_PUBLIC_OPENROUTER_API_KEY= # if using OpenRouter (optional)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Google
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Spotify
+NEXT_PUBLIC_SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
 
-## Deploy on Vercel
+# YouTube
+NEXT_PUBLIC_YOUTUBE_CLIENT_ID=
+YOUTUBE_CLIENT_SECRET=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Raindrop
+NEXT_PUBLIC_RAINDROP_CLIENT_ID=
+RAINDROP_CLIENT_SECRET=
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Notes:
+- Google Maps works independently via `NEXT_PUBLIC_GOOGLE_PLACES_API_KEY`.
+- You can use either OpenAI or OpenRouter (or both) and choose in Settings.
+
+## OAuth Setup
+
+Refer to the step‑by‑step guides included in the repo:
+
+- `GOOGLE_CALENDAR_SETUP.md`
+- `INTEGRATION_SETUP.md` (Spotify, YouTube, etc.)
+- `OAUTH_TROUBLESHOOTING.md` (common redirect URI issues)
+
+Key callback routes (dev):
+
+```
+http://localhost:3000/api/auth/google/callback
+http://localhost:3000/api/auth/youtube/callback
+http://localhost:3000/api/auth/spotify/callback
+http://localhost:3000/api/auth/raindrop/callback
+```
+
+Spotify localhost reminder: use `http://127.0.0.1:3000` if `localhost` is rejected.
+
+## Development Scripts
+
+```bash
+npm run dev     # start dev server
+npm run build   # production build
+npm run start   # start production server
+npm run lint    # run eslint
+```
+
+## Project Structure (high‑level)
+
+- `app/` — Next.js routes and UI shell (layout, page)
+- `components/` — UI components (upload area, settings, forms, actions)
+- `lib/` — API clients, OCR, extraction, classifiers, integrations
+- `app/api/auth/*` — OAuth callback endpoints (Next.js route handlers)
+
+## Security & Privacy
+
+- OAuth tokens are stored in localStorage (client-only app). Revoke from provider dashboards if needed.
+- Screenshots are processed locally for OCR; AI calls send extracted text and/or image to the configured provider.
+
+## License
+
+MIT
