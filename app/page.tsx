@@ -2,10 +2,10 @@
 
 import { EnhancedUploadArea } from '@/components/enhanced-upload-area';
 import { EnhancedDataForm } from '@/components/enhanced-data-form';
-import { EnhancedSettingsModal } from '@/components/enhanced-settings-modal';
-import { ApiKeyModal } from '@/components/api-key-modal';
 import { Button } from '@/components/ui/button';
-import { Settings, Loader2 } from 'lucide-react';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
+import { Starfield } from '@/components/ui/starfield';
+import { Loader2 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -15,21 +15,22 @@ export default function Home() {
     currentImage,
     isLoading,
     setIsLoading,
-    setShowSettings,
     setShowApiKeyModal,
     setExtractedData,
     extractedData,
     settings,
+    setShowSettings,
   } = useAppStore();
 
-  // Check API key on mount - show modal if no keys are configured
+  // Close settings modal when navigating to this page
   useEffect(() => {
-    const hasAnyKey = !!settings.openaiKey.trim() || !!settings.openrouterKey.trim();
-    
-    if (!hasAnyKey) {
-      setShowApiKeyModal(true);
-    }
-  }, [settings.openaiKey, settings.openrouterKey, setShowApiKeyModal]);
+    setShowSettings(false);
+  }, [setShowSettings]);
+
+  // Close API key modal on first load
+  useEffect(() => {
+    setShowApiKeyModal(false);
+  }, [setShowApiKeyModal]);
 
   const handleAnalyze = async () => {
     if (!currentImage) return;
@@ -78,46 +79,27 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-blue-100 to-slate-50">
-      <div className="container mx-auto px-4 py-8 md:py-16 max-w-5xl">
+    <div className="min-h-screen bg-background relative overflow-hidden" style={{ background: 'linear-gradient(to bottom right, oklch(0.08 0.06 270), oklch(0.09 0.07 265), oklch(0.07 0.06 275))' }}>
+      {/* Starfield background */}
+      <Starfield starCount={250} speed={0.2} className="opacity-40" />
+      <div className="container mx-auto px-4 py-8 md:py-16 max-w-5xl relative z-10">
         {/* Header */}
-        <header className="text-center mb-12 relative">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 400 }}
-            className="absolute top-0 right-0"
-          >
-            <Button
-              variant="outline"
-              size="icon"
-              className="bg-white/80 backdrop-blur-sm border-slate-300 text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:border-blue-400 hover:shadow-md rounded-lg transition-all shadow-sm"
-              onClick={() => setShowSettings(true)}
-            >
-              <motion.div
-                whileHover={{ rotate: 90 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Settings className="h-5 w-5" />
-              </motion.div>
-            </Button>
-          </motion.div>
-
+        <header className="text-center mb-12">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
-            className="text-5xl md:text-6xl font-bold text-slate-900 mb-4 tracking-tight"
+            className="text-5xl md:text-6xl font-bold text-foreground mb-4 tracking-tight bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent"
           >
-            SmartCapture
+            LifeCapture
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1, type: 'spring' }}
-            className="text-lg md:text-xl text-slate-600 font-medium"
+            className="text-lg md:text-xl text-muted-foreground font-medium"
           >
-            Turn screenshots into actionable items instantly
+            Turn screenshots and images into actionable items instantly
           </motion.p>
         </header>
 
@@ -126,8 +108,21 @@ export default function Home() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, type: 'spring', stiffness: 150 }}
-          className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-10 hover:shadow-xl transition-shadow duration-300"
+          className="bg-card rounded-2xl shadow-2xl border-0 p-6 md:p-10 hover:shadow-[0_0_30px_rgba(99,102,241,0.2)] transition-shadow duration-300 backdrop-blur-sm relative"
             >
+          <GlowingEffect
+            disabled={false}
+            blur={25}
+            spread={140}
+            proximity={200}
+            variant="space"
+            glow={true}
+            borderWidth={3}
+            movementDuration={3}
+            inactiveZone={0}
+            autoAnimate={true}
+            animationDuration={3}
+          />
           <EnhancedUploadArea />
 
           <AnimatePresence mode="wait" initial={false}>
@@ -152,7 +147,7 @@ export default function Home() {
                     onClick={handleAnalyze}
                     disabled={isLoading}
                     size="lg"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-base font-semibold shadow-lg hover:shadow-xl hover:shadow-primary/30 transition-all duration-200"
                   >
                     <AnimatePresence mode="wait">
                       {isLoading ? (
@@ -196,10 +191,6 @@ export default function Home() {
             )}
           </AnimatePresence>
         </motion.main>
-
-        {/* Modals */}
-        <EnhancedSettingsModal />
-        <ApiKeyModal />
         </div>
     </div>
   );

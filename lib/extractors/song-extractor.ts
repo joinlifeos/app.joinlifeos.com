@@ -39,7 +39,7 @@ export async function extractSongData(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${settings.openrouterKey}`,
         'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-        'X-Title': 'SmartCapture Song Extractor',
+        'X-Title': 'LifeCapture Song Extractor',
       },
       body: JSON.stringify({
         model: settings.model,

@@ -55,7 +55,7 @@ export async function extractEventData(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${settings.openrouterKey}`,
         'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-        'X-Title': 'SmartCapture Event Extractor',
+        'X-Title': 'LifeCapture Event Extractor',
       },
       body: JSON.stringify({
         model: settings.model,

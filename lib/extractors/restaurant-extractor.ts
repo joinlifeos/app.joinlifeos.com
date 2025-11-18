@@ -38,7 +38,7 @@ export async function extractRestaurantData(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${settings.openrouterKey}`,
         'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-        'X-Title': 'SmartCapture Restaurant Extractor',
+        'X-Title': 'LifeCapture Restaurant Extractor',
       },
       body: JSON.stringify({
         model: settings.model,

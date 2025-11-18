@@ -3,7 +3,8 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
-import { Upload, Clipboard, X } from 'lucide-react';
+import { X } from 'lucide-react';
+import { UploadAnimated, ClipboardAnimated } from '@/components/ui/animate-icons';
 import { useAppStore } from '@/lib/store';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'motion/react';
 import { cn } from '@/lib/utils';
@@ -86,12 +87,12 @@ export function EnhancedUploadArea() {
             duration: 0.25,
             ease: [0.4, 0, 0.2, 1]
           }}
-          className="relative rounded-xl overflow-hidden bg-slate-50 border border-slate-200 group shadow-lg hover:shadow-xl transition-shadow duration-300"
+          className="relative rounded-xl overflow-hidden bg-muted border border-border group shadow-lg hover:shadow-xl hover:shadow-primary/20 transition-shadow duration-300"
         >
           <img
             src={currentImage}
             alt="Preview"
-            className="w-full max-h-[500px] object-contain bg-white"
+            className="w-full max-h-[500px] object-contain bg-card"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -142,8 +143,8 @@ export function EnhancedUploadArea() {
                 className={cn(
                   'relative border-2 border-dashed rounded-xl p-12 text-center cursor-pointer overflow-hidden transition-all duration-200',
                   isActive
-                    ? 'border-blue-500 bg-blue-50/50 scale-[1.02]'
-                    : 'border-slate-300 hover:border-blue-400 bg-slate-50/50 hover:scale-[1.01]'
+                    ? 'border-primary bg-primary/10 scale-[1.02]'
+                    : 'border-border hover:border-primary/50 bg-muted/30 hover:scale-[1.01]'
                 )}
               >
                 <input {...getInputProps()} />
@@ -152,11 +153,11 @@ export function EnhancedUploadArea() {
                 <motion.div
                   className="absolute inset-0 opacity-0 pointer-events-none"
                   animate={{
-                    opacity: isActive ? 0.1 : 0,
+                    opacity: isActive ? 0.15 : 0,
                   }}
                   transition={{ duration: 0.3 }}
                   style={{
-                    background: `radial-gradient(600px circle at ${springX}px ${springY}px, rgba(59, 130, 246, 0.15), transparent 40%)`,
+                    background: `radial-gradient(600px circle at ${springX}px ${springY}px, oklch(0.65 0.20 260 / 0.2), transparent 40%)`,
                   }}
                 />
 
@@ -173,15 +174,15 @@ export function EnhancedUploadArea() {
                       className={cn(
                         'rounded-full p-4 transition-colors duration-200',
                         isActive
-                          ? 'bg-blue-100 text-blue-600'
-                          : 'bg-slate-100 text-slate-400'
+                          ? 'bg-primary/20 text-primary'
+                          : 'bg-muted text-muted-foreground'
                       )}
                       animate={{
                         rotate: isActive ? [0, -10, 10, -10, 0] : 0,
                       }}
                       transition={{ duration: 0.5 }}
                     >
-                      <Upload className="h-10 w-10" />
+                      <UploadAnimated className="h-10 w-10" />
                     </motion.div>
                   </motion.div>
 
@@ -192,10 +193,10 @@ export function EnhancedUploadArea() {
                     }}
                     transition={{ duration: 0.2 }}
                   >
-                    <h2 className="text-2xl font-semibold text-slate-900">
+                    <h2 className="text-2xl font-semibold text-foreground">
                       Upload Screenshot
                     </h2>
-                    <p className="text-slate-600">
+                    <p className="text-muted-foreground">
                       Drag & drop an image or click to browse
                     </p>
                   </motion.div>
@@ -213,15 +214,15 @@ export function EnhancedUploadArea() {
                           open();
                         }}
                         size="lg"
-                        className="bg-slate-900 hover:bg-slate-800 text-white shadow-sm hover:shadow-md transition-all"
+                        className="group bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg hover:shadow-primary/30 transition-all inline-flex items-center"
                       >
-                        <Upload className="mr-2 h-4 w-4" />
+                        <UploadAnimated className="mr-2 h-4 w-4" />
                         Browse Files
                       </Button>
                     </motion.div>
 
                     <motion.span
-                      className="text-sm text-slate-500 font-medium px-2"
+                      className="text-sm text-muted-foreground font-medium px-2"
                       animate={{ opacity: [0.5, 1, 0.5] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
@@ -236,9 +237,9 @@ export function EnhancedUploadArea() {
                           handlePaste();
                         }}
                         size="lg"
-                        className="border-slate-300 hover:border-slate-400 hover:bg-slate-50 transition-all"
+                        className="group border-border hover:border-primary/50 hover:bg-muted transition-all inline-flex items-center"
                       >
-                        <Clipboard className="mr-2 h-4 w-4" />
+                        <ClipboardAnimated className="mr-2 h-4 w-4" />
                         Paste from Clipboard
                       </Button>
                     </motion.div>

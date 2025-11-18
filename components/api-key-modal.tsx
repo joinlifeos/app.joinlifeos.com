@@ -164,11 +164,11 @@ export function ApiKeyModal() {
     <Dialog open={showApiKeyModal} onOpenChange={setShowApiKeyModal}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
-            <Settings className="h-6 w-6 text-blue-600" />
+          <DialogTitle className="text-2xl font-semibold text-foreground flex items-center gap-2">
+            <Settings className="h-6 w-6 text-primary" />
             Configure API Settings
           </DialogTitle>
-          <DialogDescription className="text-slate-600">
+          <DialogDescription className="text-muted-foreground">
             Set up your AI provider and API keys. You can configure both OpenAI and OpenRouter,
             and switch between them anytime in settings.
           </DialogDescription>
@@ -177,12 +177,12 @@ export function ApiKeyModal() {
         <div className="space-y-6 py-4">
           {/* Default Provider Selection */}
           <div className="space-y-2">
-            <Label htmlFor="provider" className="text-sm font-medium text-slate-700">
+            <Label htmlFor="provider" className="text-sm font-medium text-foreground">
               Default AI Provider
             </Label>
             <select
               id="provider"
-              className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500"
+              className="flex h-10 w-full rounded-md border border-border bg-input px-3 py-2 text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary"
               value={provider}
               onChange={(e) =>
                 setProvider(e.target.value as 'openai' | 'openrouter')
@@ -191,23 +191,23 @@ export function ApiKeyModal() {
               <option value="openai">OpenAI</option>
               <option value="openrouter">OpenRouter</option>
             </select>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted-foreground">
               Choose your preferred provider. You can still configure both and switch later.
             </p>
           </div>
 
           {/* OpenAI Configuration */}
-          <div className="space-y-3 p-4 rounded-lg border border-slate-200 bg-slate-50/50">
+          <div className="space-y-3 p-4 rounded-lg border border-border bg-card/50">
             <div className="flex items-center gap-2">
-              <Label className="text-sm font-semibold text-slate-900">
+              <Label className="text-sm font-semibold text-foreground">
                 OpenAI Configuration
               </Label>
               {openaiKey.trim() && (
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="openaiKey" className="text-xs text-slate-600">
+              <Label htmlFor="openaiKey" className="text-xs text-muted-foreground">
                 OpenAI API Key
               </Label>
               <Input
@@ -216,15 +216,15 @@ export function ApiKeyModal() {
                 placeholder="sk-..."
                 value={openaiKey}
                 onChange={(e) => setOpenaiKey(e.target.value)}
-                className="bg-white border-slate-300 focus:border-blue-500 focus:ring-blue-500/20"
+                className="bg-input border-border focus:border-primary focus:ring-primary/20"
               />
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 Get your API key from{' '}
                 <a
                   href="https://platform.openai.com/api-keys"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline font-medium"
+                  className="text-primary hover:underline font-medium"
                 >
                   OpenAI Platform
                 </a>
@@ -233,18 +233,18 @@ export function ApiKeyModal() {
           </div>
 
           {/* OpenRouter Configuration */}
-          <div className="space-y-3 p-4 rounded-lg border border-slate-200 bg-slate-50/50">
+          <div className="space-y-3 p-4 rounded-lg border border-border bg-card/50">
             <div className="flex items-center gap-2">
-              <Label className="text-sm font-semibold text-slate-900">
+              <Label className="text-sm font-semibold text-foreground">
                 OpenRouter Configuration
               </Label>
               {openrouterKey.trim() && (
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
               )}
             </div>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="openrouterKey" className="text-xs text-slate-600">
+                <Label htmlFor="openrouterKey" className="text-xs text-muted-foreground">
                   OpenRouter API Key
                 </Label>
                 <Input
@@ -253,15 +253,15 @@ export function ApiKeyModal() {
                   placeholder="sk-or-..."
                   value={openrouterKey}
                   onChange={(e) => setOpenrouterKey(e.target.value)}
-                  className="bg-white border-slate-300 focus:border-blue-500 focus:ring-blue-500/20"
+                  className="bg-input border-border focus:border-primary focus:ring-primary/20"
                 />
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   Get your key from{' '}
                   <a
                     href="https://openrouter.ai/keys"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline font-medium"
+                    className="text-primary hover:underline font-medium"
                   >
                     openrouter.ai/keys
                   </a>
@@ -269,12 +269,12 @@ export function ApiKeyModal() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="model" className="text-xs text-slate-600">
+                <Label htmlFor="model" className="text-xs text-muted-foreground">
                   Vision Model
                 </Label>
                 <select
                   id="model"
-                  className="flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500"
+                  className="flex h-10 w-full rounded-md border border-border bg-input px-3 py-2 text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary"
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                 >
@@ -301,7 +301,7 @@ export function ApiKeyModal() {
                     </option>
                   </optgroup>
                 </select>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   Select a vision model for OpenRouter. Claude and Gemini are often faster and cheaper.
                 </p>
               </div>
@@ -310,23 +310,23 @@ export function ApiKeyModal() {
 
           {/* Service Integrations */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-900">Service Integrations</h3>
+            <h3 className="text-lg font-semibold text-foreground">Service Integrations</h3>
 
             {/* Google Calendar */}
             <motion.div
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="p-4 rounded-lg border border-slate-200 bg-gradient-to-r from-slate-50 to-green-50/30 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="p-4 rounded-lg border border-border bg-card/50 shadow-sm hover:shadow-md hover:shadow-primary/10 transition-shadow duration-300"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-yellow-600" />
-                  <Label className="text-sm font-semibold text-slate-900">
+                  <Calendar className="h-5 w-5 text-yellow-500" />
+                  <Label className="text-sm font-semibold text-foreground">
                     Google Calendar
                   </Label>
                   {isGoogleConnected && (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-green-500" />
                   )}
                 </div>
                 {isGoogleConnected ? (
@@ -338,7 +338,7 @@ export function ApiKeyModal() {
                       setIsGoogleConnected(false);
                       setIsGoogleMapsConnected(isGoogleMapsAuthenticated());
                     }}
-                    className="text-slate-600 hover:text-slate-900 text-xs"
+                    className="text-muted-foreground hover:text-foreground border-border hover:border-primary/50 text-xs"
                   >
                     <LogOut className="mr-1 h-3 w-3" />
                     Disconnect
@@ -348,13 +348,13 @@ export function ApiKeyModal() {
                     type="button"
                     size="sm"
                     onClick={initiateGoogleAuth}
-                    className="bg-green-600 hover:bg-green-700 text-white text-xs"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs"
                   >
                     Connect
                   </Button>
                 )}
               </div>
-              <p className="text-xs text-slate-600 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 {isGoogleConnected
                   ? 'Connected - Events can be added directly to your Google Calendar'
                   : 'Add events directly to Google Calendar without downloading ICS files'}
@@ -366,16 +366,16 @@ export function ApiKeyModal() {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
-              className="p-4 rounded-lg border border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50/30 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="p-4 rounded-lg border border-border bg-card/50 shadow-sm hover:shadow-md hover:shadow-primary/10 transition-shadow duration-300"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-blue-600" />
-                  <Label className="text-sm font-semibold text-slate-900">
+                  <MapPin className="h-5 w-5 text-primary" />
+                  <Label className="text-sm font-semibold text-foreground">
                     Google Maps
                   </Label>
                   {isGoogleMapsConnected && (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-green-500" />
                   )}
                 </div>
               {isGoogleMapsConnected ? (
@@ -386,7 +386,7 @@ export function ApiKeyModal() {
                     clearGoogleMapsAuth();
                     setIsGoogleMapsConnected(isGoogleMapsAuthenticated());
                   }}
-                  className="text-slate-600 hover:text-slate-900 text-xs"
+                  className="text-muted-foreground hover:text-foreground border-border hover:border-primary/50 text-xs"
                 >
                   <LogOut className="mr-1 h-3 w-3" />
                   Disconnect
@@ -399,16 +399,16 @@ export function ApiKeyModal() {
                     enableGoogleMaps();
                     setIsGoogleMapsConnected(isGoogleMapsAuthenticated());
                   }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs"
                 >
                   Connect
                 </Button>
               )}
               </div>
-              <p className="text-xs text-slate-600 mt-2">
-              {isGoogleMapsConnected
-                ? 'Connected - Restaurants can be saved to Google Maps'
-                : 'Configure Google Places API key to enable place search; fallback opens Maps search'}
+              <p className="text-xs text-muted-foreground mt-2">
+             {isGoogleMapsConnected
+               ? 'Connected - Restaurants can be saved to Google Maps'
+               : 'Configure Google Places API key to enable place search; fallback opens Maps search'}
               </p>
             </motion.div>
 
@@ -417,16 +417,16 @@ export function ApiKeyModal() {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="p-4 rounded-lg border border-slate-200 bg-gradient-to-r from-slate-50 to-red-50/30 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="p-4 rounded-lg border border-border bg-card/50 shadow-sm hover:shadow-md hover:shadow-primary/10 transition-shadow duration-300"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Video className="h-5 w-5 text-red-600" />
-                  <Label className="text-sm font-semibold text-slate-900">
+                  <Video className="h-5 w-5 text-destructive" />
+                  <Label className="text-sm font-semibold text-foreground">
                     YouTube
                   </Label>
                   {isYouTubeConnected && (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-green-500" />
                   )}
                 </div>
                 {isYouTubeConnected ? (
@@ -437,7 +437,7 @@ export function ApiKeyModal() {
                       clearYouTubeAuth();
                       setIsYouTubeConnected(false);
                     }}
-                    className="text-slate-600 hover:text-slate-900 text-xs"
+                    className="text-muted-foreground hover:text-foreground border-border hover:border-primary/50 text-xs"
                   >
                     <LogOut className="mr-1 h-3 w-3" />
                     Disconnect
@@ -447,13 +447,13 @@ export function ApiKeyModal() {
                     type="button"
                     size="sm"
                     onClick={initiateYouTubeAuth}
-                    className="bg-red-600 hover:bg-red-700 text-white text-xs"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs"
                   >
                     Connect
                   </Button>
                 )}
               </div>
-              <p className="text-xs text-slate-600 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 {isYouTubeConnected
                   ? 'Connected - Videos can be added directly to your YouTube playlists'
                   : 'Add videos directly to your YouTube playlists'}
@@ -465,16 +465,16 @@ export function ApiKeyModal() {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              className="p-4 rounded-lg border border-slate-200 bg-gradient-to-r from-slate-50 to-green-50/30 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="p-4 rounded-lg border border-border bg-card/50 shadow-sm hover:shadow-md hover:shadow-primary/10 transition-shadow duration-300"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Music className="h-5 w-5 text-green-500" />
-                  <Label className="text-sm font-semibold text-slate-900">
+                  <Label className="text-sm font-semibold text-foreground">
                     Spotify
                   </Label>
                   {isSpotifyConnected && (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-green-500" />
                   )}
                 </div>
                 {isSpotifyConnected ? (
@@ -485,7 +485,7 @@ export function ApiKeyModal() {
                       clearSpotifyAuth();
                       setIsSpotifyConnected(false);
                     }}
-                    className="text-slate-600 hover:text-slate-900 text-xs"
+                    className="text-muted-foreground hover:text-foreground border-border hover:border-primary/50 text-xs"
                   >
                     <LogOut className="mr-1 h-3 w-3" />
                     Disconnect
@@ -495,13 +495,13 @@ export function ApiKeyModal() {
                     type="button"
                     size="sm"
                     onClick={initiateSpotifyAuth}
-                    className="bg-green-500 hover:bg-green-600 text-white text-xs"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs"
                   >
                     Connect
                   </Button>
                 )}
               </div>
-              <p className="text-xs text-slate-600 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 {isSpotifyConnected
                   ? 'Connected - Songs can be added directly to your Spotify playlists'
                   : 'Add songs directly to your Spotify playlists'}
@@ -513,16 +513,16 @@ export function ApiKeyModal() {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="p-4 rounded-lg border border-slate-200 bg-gradient-to-r from-slate-50 to-purple-50/30 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="p-4 rounded-lg border border-border bg-card/50 shadow-sm hover:shadow-md hover:shadow-primary/10 transition-shadow duration-300"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <LinkIcon className="h-5 w-5 text-purple-600" />
-                  <Label className="text-sm font-semibold text-slate-900">
+                  <LinkIcon className="h-5 w-5 text-accent" />
+                  <Label className="text-sm font-semibold text-foreground">
                     Raindrop
                   </Label>
                   {isRaindropConnected && (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <CheckCircle2 className="h-4 w-4 text-green-500" />
                   )}
                 </div>
                 {isRaindropConnected ? (
@@ -533,7 +533,7 @@ export function ApiKeyModal() {
                       clearRaindropAuth();
                       setIsRaindropConnected(false);
                     }}
-                    className="text-slate-600 hover:text-slate-900 text-xs"
+                    className="text-muted-foreground hover:text-foreground border-border hover:border-primary/50 text-xs"
                   >
                     <LogOut className="mr-1 h-3 w-3" />
                     Disconnect
@@ -543,13 +543,13 @@ export function ApiKeyModal() {
                     type="button"
                     size="sm"
                     onClick={initiateRaindropAuth}
-                    className="bg-purple-600 hover:bg-purple-700 text-white text-xs"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs"
                   >
                     Connect
                   </Button>
                 )}
               </div>
-              <p className="text-xs text-slate-600 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 {isRaindropConnected
                   ? 'Connected - Links and posts can be saved directly to your Raindrop collections'
                   : 'Save links and posts directly to your Raindrop collections'}
@@ -559,17 +559,17 @@ export function ApiKeyModal() {
 
           {/* Info message */}
           {!hasAtLeastOneKey && (
-            <div className="p-3 rounded-lg bg-blue-50 border border-blue-200">
-              <p className="text-sm text-blue-800">
-                <strong>Note:</strong> You need at least one API key configured to use SmartCapture.
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+              <p className="text-sm text-primary/90">
+                <strong>Note:</strong> You need at least one API key configured to use LifeCapture.
                 Configure either OpenAI or OpenRouter (or both) to get started.
               </p>
             </div>
           )}
 
           {hasAtLeastOneKey && !canSave && (
-            <div className="p-3 rounded-lg bg-yellow-50 border border-yellow-200">
-              <p className="text-sm text-yellow-800">
+            <div className="p-3 rounded-lg bg-accent/10 border border-accent/30">
+              <p className="text-sm text-accent/90">
                 <strong>Note:</strong> Your default provider ({provider === 'openai' ? 'OpenAI' : 'OpenRouter'}) requires an API key.
                 Please enter the key for your selected provider, or change your default provider.
               </p>
@@ -580,13 +580,13 @@ export function ApiKeyModal() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.25 }}
-            className="flex justify-end gap-3 pt-2 border-t border-slate-200"
+            className="flex justify-end gap-3 pt-2 border-t border-border"
           >
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button
                 variant="outline"
                 onClick={() => setShowApiKeyModal(false)}
-                className="border-slate-300 hover:border-slate-400 hover:bg-slate-50 transition-all"
+                className="border-border hover:border-primary/50 hover:bg-muted transition-all"
               >
                 Cancel
               </Button>
@@ -595,7 +595,7 @@ export function ApiKeyModal() {
               <Button
                 onClick={handleSave}
                 disabled={!canSave || saved}
-                className="bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg hover:shadow-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
               <AnimatePresence mode="wait">
                 {saved ? (

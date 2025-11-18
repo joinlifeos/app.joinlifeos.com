@@ -1,5 +1,5 @@
 {
-  "name": "smartcapture",
+  "name": "lifecapture",
   "version": "0.2.0",
   "private": true,
   "description": "AI-powered web app to extract event information from screenshots and add to calendar",
@@ -13,6 +13,7 @@
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-select": "^2.2.6",
+    "@tabler/icons-react": "^3.35.0",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.9.1",

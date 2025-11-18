@@ -1,6 +1,6 @@
 <div align="center">
 
-# SmartCapture
+# LifeCapture
 
 Turn screenshots into actionable items instantly — events to calendar, songs to playlists, videos to YouTube, restaurants to maps, links to bookmarks, and more.
 
@@ -8,11 +8,11 @@ Turn screenshots into actionable items instantly — events to calendar, songs t
 
 ## Overview
 
-SmartCapture is a Next.js app that classifies a screenshot (event, song, video, restaurant, link, social post), extracts structured data using OCR + AI, and offers one‑click actions:
+LifeCapture is a Next.js app that classifies a screenshot (event, song, video, restaurant, link, social post), extracts structured data using OCR + AI, and offers one‑click actions:
 
 - Add events to Google Calendar or download ICS
-- Add songs to a Spotify playlist named "SmartCapture" or open in Apple Music
-- Add videos to a YouTube playlist named "SmartCapture"
+- Add songs to a Spotify playlist named "LifeCapture" or open in Apple Music
+- Add videos to a YouTube playlist named "LifeCapture"
 - Save restaurants to Google Maps (opens place/search URL)
 - Save links/social posts to Raindrop or export a bookmark HTML
 

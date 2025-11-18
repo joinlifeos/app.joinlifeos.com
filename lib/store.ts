@@ -32,6 +32,8 @@ interface AppState {
   setRaindropAuth: (auth: ServiceAuth | null) => void;
   googleMapsAuth: ServiceAuth | null;
   setGoogleMapsAuth: (auth: ServiceAuth | null) => void;
+  gmailAuth: ServiceAuth | null;
+  setGmailAuth: (auth: ServiceAuth | null) => void;
 
   // UI state
   isLoading: boolean;
@@ -72,6 +74,8 @@ export const useAppStore = create<AppState>()(
       setRaindropAuth: (auth) => set({ raindropAuth: auth }),
       googleMapsAuth: null,
       setGoogleMapsAuth: (auth) => set({ googleMapsAuth: auth }),
+      gmailAuth: null,
+      setGmailAuth: (auth) => set({ gmailAuth: auth }),
 
       isLoading: false,
       setIsLoading: (loading) => set({ isLoading: loading }),
@@ -81,7 +85,7 @@ export const useAppStore = create<AppState>()(
       setShowApiKeyModal: (show) => set({ showApiKeyModal: show }),
     }),
     {
-      name: 'smartcapture-storage',
+      name: 'lifecapture-storage',
       storage: typeof window !== 'undefined' ? createJSONStorage(() => localStorage) : undefined,
       partialize: (state) => ({
         settings: state.settings,
@@ -90,6 +94,7 @@ export const useAppStore = create<AppState>()(
         youtubeAuth: state.youtubeAuth,
         raindropAuth: state.raindropAuth,
         googleMapsAuth: state.googleMapsAuth,
+        gmailAuth: state.gmailAuth,
       }),
     }
   )

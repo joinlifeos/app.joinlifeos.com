@@ -1,10 +1,10 @@
 # Integration Setup Guide
 
-This guide walks you through setting up all the service integrations for SmartCapture.
+This guide walks you through setting up all the service integrations for LifeCapture.
 
 ## Overview
 
-SmartCapture supports the following integrations:
+LifeCapture supports the following integrations:
 
 ### Music Services
 - **Spotify** - For adding songs to playlists (requires OAuth setup)
@@ -37,12 +37,13 @@ SmartCapture supports the following integrations:
 ### Step 1: Create Google Cloud Project
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Click "Create Project" or select an existing project
-3. Give it a name (e.g., "SmartCapture")
+3. Give it a name (e.g., "LifeCapture")
 
 ### Step 2: Enable APIs
 1. In the Google Cloud Console, go to "APIs & Services" > "Library"
 2. Enable the following APIs:
    - **Google Calendar API** (for Google Calendar integration)
+   - **Gmail API** (for Gmail integration - required for pulling tasks from Gmail)
    - **YouTube Data API v3** (if using YouTube integration)
    - **Google Places API** (optional, for enhanced Google Maps integration)
 
@@ -51,24 +52,26 @@ SmartCapture supports the following integrations:
 2. Click "Create Credentials" > "OAuth client ID"
 3. If prompted, configure the OAuth consent screen:
    - User Type: External (for personal use) or Internal (for Google Workspace)
-   - App name: SmartCapture
+   - App name: LifeCapture
    - User support email: Your email
    - Developer contact: Your email
    - Click "Save and Continue" through the scopes section
    - Add test users if needed, then "Save and Continue"
 4. For the OAuth client:
    - Application type: Web application
-   - Name: SmartCapture Web Client
+   - Name: LifeCapture Web Client
    - Authorized JavaScript origins:
      - `http://localhost:3000` (for development)
      - Your production domain (e.g., `https://yourdomain.com`)
    - Authorized redirect URIs (click **Add URI** for each):
-     - `http://localhost:3000/api/auth/google/callback` (for development)
-     - `http://localhost:3000/api/auth/youtube/callback` (for YouTube, add this too!)
+     - `http://localhost:3000/api/auth/google/callback` (for Google Calendar)
+     - `http://localhost:3000/api/auth/youtube/callback` (for YouTube)
+     - `http://localhost:3000/api/auth/gmail/callback` (for Gmail - **add this!**)
      - Your production callback URLs:
        - `https://yourdomain.com/api/auth/google/callback`
        - `https://yourdomain.com/api/auth/youtube/callback`
-   - **Important:** Add ALL redirect URIs you'll use (both Google Calendar and YouTube)
+       - `https://yourdomain.com/api/auth/gmail/callback`
+   - **Important:** Add ALL redirect URIs you'll use (Google Calendar, YouTube, and Gmail)
    - Click "Create"
 5. Copy the **Client ID** and **Client Secret**
 
@@ -105,7 +108,7 @@ Apple Music integration works automatically using URL schemes and web search URL
 1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Click "Create an app"
 3. Fill in:
-   - App name: SmartCapture
+   - App name: LifeCapture
    - App description: Add songs from screenshots to Spotify playlists
    - Website (optional): Your website URL
    - Click "Save"
@@ -164,7 +167,7 @@ If you prefer separate credentials:
 1. In Google Cloud Console, go to "APIs & Services" > "Credentials"
 2. Click "Create Credentials" > "OAuth client ID"
 3. Application type: Web application
-4. Name: SmartCapture YouTube Client
+4. Name: LifeCapture YouTube Client
 5. Authorized JavaScript origins:
    - `http://localhost:3000`
    - Your production domain
@@ -228,7 +231,7 @@ NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=your_places_api_key_here
 2. Scroll down to "Developers" section
 3. Click "Create new app"
 4. Fill in:
-   - Name: SmartCapture
+   - Name: LifeCapture
    - Redirect URI: `http://localhost:3000/api/auth/raindrop/callback`
    - Description: Save bookmarks from screenshots to Raindrop
    - Click "Create"

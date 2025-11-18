@@ -79,3 +79,18 @@ export interface OCRResult {
   confidence?: number;
 }
 
+export type TaskPriority = 'p1' | 'p2' | 'p3' | 'p4';
+
+export interface Task {
+  id: string;
+  title: string;
+  completed: boolean;
+  dueDate: string | null;
+  priority: TaskPriority;
+  createdAt: string;
+  updatedAt: string;
+  description?: string;
+}
+
+export type TaskFilter = 'today' | 'upcoming' | 'all';
+

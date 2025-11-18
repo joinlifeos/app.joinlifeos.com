@@ -514,11 +514,11 @@ function generateICS(event) {
     const ics = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
-        'PRODID:-//SmartCapture//Event Calendar//EN',
+        'PRODID:-//LifeCapture//Event Calendar//EN',
         'CALSCALE:GREGORIAN',
         'METHOD:PUBLISH',
         'BEGIN:VEVENT',
-        `UID:${Date.now()}@smartcapture.app`,
+        `UID:${Date.now()}@lifecapture.app`,
         `DTSTAMP:${fmt(new Date())}`,
         `DTSTART:${fmt(start)}`,
         `DTEND:${fmt(end)}`,
@@ -692,7 +692,7 @@ async function callVisionAPI(promptText, imageDataUrl) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${settings.openrouterKey}`,
                 'HTTP-Referer': window.location.origin,
-                'X-Title': 'SmartCapture Event Extractor'
+                'X-Title': 'LifeCapture Event Extractor'
             },
             body: JSON.stringify({
                 model: settings.model,

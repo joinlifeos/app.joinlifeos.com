@@ -36,7 +36,7 @@ export async function extractSocialPostData(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${settings.openrouterKey}`,
         'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-        'X-Title': 'SmartCapture Social Post Extractor',
+        'X-Title': 'LifeCapture Social Post Extractor',
       },
       body: JSON.stringify({
         model: settings.model,

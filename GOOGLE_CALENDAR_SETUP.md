@@ -1,6 +1,6 @@
 # Google Calendar API Setup
 
-This guide will help you set up Google Calendar integration for SmartCapture.
+This guide will help you set up Google Calendar integration for LifeCapture.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ This guide will help you set up Google Calendar integration for SmartCapture.
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Click "Select a project" → "New Project"
-3. Enter a project name (e.g., "SmartCapture")
+3. Enter a project name (e.g., "LifeCapture")
 4. Click "Create"
 
 ### 2. Enable Google Calendar API
@@ -29,14 +29,14 @@ This guide will help you set up Google Calendar integration for SmartCapture.
 3. If prompted, configure the OAuth consent screen:
    - Choose "External" (unless you have a Google Workspace)
    - Fill in the required fields:
-     - App name: SmartCapture
+     - App name: LifeCapture
      - User support email: your email
      - Developer contact: your email
    - Add scopes: `https://www.googleapis.com/auth/calendar.events`
    - Save and continue
 4. Create OAuth client ID:
    - Application type: "Web application"
-   - Name: SmartCapture Web Client
+   - Name: LifeCapture Web Client
    - Authorized redirect URIs:
      - `http://localhost:3000/api/auth/google/callback` (for development)
      - `https://yourdomain.com/api/auth/google/callback` (for production)

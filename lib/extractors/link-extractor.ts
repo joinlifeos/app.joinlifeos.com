@@ -35,7 +35,7 @@ export async function extractLinkData(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${settings.openrouterKey}`,
         'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-        'X-Title': 'SmartCapture Link Extractor',
+        'X-Title': 'LifeCapture Link Extractor',
       },
       body: JSON.stringify({
         model: settings.model,

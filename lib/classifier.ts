@@ -44,7 +44,7 @@ Return ONLY valid JSON: {"type": "event" | "song" | "video" | "restaurant" | "li
         'Content-Type': 'application/json',
         Authorization: `Bearer ${settings.openrouterKey}`,
         'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-        'X-Title': 'SmartCapture Classifier',
+        'X-Title': 'LifeCapture Classifier',
       },
       body: JSON.stringify({
         model: settings.model,

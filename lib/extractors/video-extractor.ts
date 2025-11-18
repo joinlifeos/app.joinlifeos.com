@@ -37,7 +37,7 @@ export async function extractVideoData(
         'Content-Type': 'application/json',
         Authorization: `Bearer ${settings.openrouterKey}`,
         'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : '',
-        'X-Title': 'SmartCapture Video Extractor',
+        'X-Title': 'LifeCapture Video Extractor',
       },
       body: JSON.stringify({
         model: settings.model,

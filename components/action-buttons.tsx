@@ -288,23 +288,23 @@ export function ActionButtons({ type, data }: ActionButtonsProps) {
 
         const track = tracks[0];
         
-        // Look for existing "SmartCapture" playlist or create it
+        // Look for existing "LifeCapture" playlist or create it
         const playlists = await getUserPlaylists();
         let playlistId: string;
         
-        // Search for existing "SmartCapture" playlist
-        const smartCapturePlaylist = playlists.find(
-          (playlist) => playlist.name.toLowerCase() === 'smartcapture'
+        // Search for existing "LifeCapture" playlist
+        const lifeCapturePlaylist = playlists.find(
+          (playlist) => playlist.name.toLowerCase() === 'lifecapture'
         );
         
-        if (smartCapturePlaylist) {
-          playlistId = smartCapturePlaylist.id;
+        if (lifeCapturePlaylist) {
+          playlistId = lifeCapturePlaylist.id;
         } else {
-          // Create a new "SmartCapture" playlist
+          // Create a new "LifeCapture" playlist
           const { createSpotifyPlaylist } = await import('@/lib/spotify');
           const newPlaylist = await createSpotifyPlaylist(
-            'SmartCapture',
-            'Songs saved from SmartCapture'
+            'LifeCapture',
+            'Songs saved from LifeCapture'
           );
           playlistId = newPlaylist.id;
         }
@@ -441,17 +441,17 @@ export function ActionButtons({ type, data }: ActionButtonsProps) {
           const video = (videoData.channel
             ? videos.find(v => v.channelTitle?.toLowerCase() === videoData.channel!.toLowerCase()) || videos[0]
             : videos[0]);
-          // Look for existing "SmartCapture" playlist or create it
+          // Look for existing "LifeCapture" playlist or create it
           const playlists = await getYouTubePlaylists();
           let playlistId: string;
           
-          const smartCapture = playlists.find((p) => p.title.toLowerCase() === 'smartcapture');
-          if (smartCapture) {
-            playlistId = smartCapture.id;
+          const lifeCapture = playlists.find((p) => p.title.toLowerCase() === 'lifecapture');
+          if (lifeCapture) {
+            playlistId = lifeCapture.id;
           } else {
             // Create a new playlist
             const { createYouTubePlaylist } = await import('@/lib/youtube');
-            const newPlaylist = await createYouTubePlaylist('SmartCapture', 'Videos saved from SmartCapture');
+            const newPlaylist = await createYouTubePlaylist('LifeCapture', 'Videos saved from LifeCapture');
             playlistId = newPlaylist.id;
           }
 
@@ -467,12 +467,12 @@ export function ActionButtons({ type, data }: ActionButtonsProps) {
           const playlists = await getYouTubePlaylists();
           let playlistId: string;
           
-          const smartCapture = playlists.find((p) => p.title.toLowerCase() === 'smartcapture');
-          if (smartCapture) {
-            playlistId = smartCapture.id;
+          const lifeCapture = playlists.find((p) => p.title.toLowerCase() === 'lifecapture');
+          if (lifeCapture) {
+            playlistId = lifeCapture.id;
           } else {
             const { createYouTubePlaylist } = await import('@/lib/youtube');
-            const newPlaylist = await createYouTubePlaylist('SmartCapture', 'Videos saved from SmartCapture');
+            const newPlaylist = await createYouTubePlaylist('LifeCapture', 'Videos saved from LifeCapture');
             playlistId = newPlaylist.id;
           }
 
