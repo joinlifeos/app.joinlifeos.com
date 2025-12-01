@@ -11,6 +11,13 @@ interface ServiceAuth {
 
 interface AppState {
   // Image state
+  currentImages: string[];
+  setCurrentImages: (images: string[]) => void;
+  addImages: (images: string[]) => void;
+  removeImage: (index: number) => void;
+  clearImages: () => void;
+
+  // Legacy single image support (for backwards compatibility)
   currentImage: string | null;
   setCurrentImage: (image: string | null) => void;
 
@@ -19,8 +26,9 @@ interface AppState {
   updateSettings: (settings: Partial<AppSettings>) => void;
 
   // Extracted data state (replaces eventData)
-  extractedData: ExtractedResult | null;
-  setExtractedData: (data: ExtractedResult) => void;
+  extractedData: ExtractedResult[];
+  setExtractedData: (data: ExtractedResult[] | ExtractedResult) => void;
+  addExtractedData: (data: ExtractedResult) => void;
   resetExtractedData: () => void;
 
   // Service authentication states
@@ -47,8 +55,28 @@ interface AppState {
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
+      currentImages: [],
+      setCurrentImages: (images) => set({ currentImages: images, currentImage: images[0] || null }),
+      addImages: (images) => set((state) => ({ 
+        currentImages: [...state.currentImages, ...images],
+        currentImage: [...state.currentImages, ...images][0] || null
+      })),
+      removeImage: (index) => set((state) => {
+        const newImages = state.currentImages.filter((_, i) => i !== index);
+        return {
+          currentImages: newImages,
+          currentImage: newImages[0] || null,
+          extractedData: state.extractedData.filter((_, i) => i !== index)
+        };
+      }),
+      clearImages: () => set({ currentImages: [], currentImage: null, extractedData: [] }),
+      
+      // Legacy single image support
       currentImage: null,
-      setCurrentImage: (image) => set({ currentImage: image }),
+      setCurrentImage: (image) => set({ 
+        currentImage: image,
+        currentImages: image ? [image] : []
+      }),
 
       settings: {
         provider: 'openai',
@@ -61,9 +89,10 @@ export const useAppStore = create<AppState>()(
           settings: { ...state.settings, ...newSettings },
         })),
 
-      extractedData: null,
-      setExtractedData: (data) => set({ extractedData: data }),
-      resetExtractedData: () => set({ extractedData: null }),
+      extractedData: [],
+      setExtractedData: (data) => set({ extractedData: Array.isArray(data) ? data : [data] }),
+      addExtractedData: (data) => set((state) => ({ extractedData: [...state.extractedData, data] })),
+      resetExtractedData: () => set({ extractedData: [] }),
 
       // Service auth states
       spotifyAuth: null,

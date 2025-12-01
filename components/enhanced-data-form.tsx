@@ -20,36 +20,55 @@ import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
 import { ActionButtons } from './action-buttons';
 
-export function EnhancedDataForm() {
-  const { extractedData, setExtractedData, resetExtractedData, setCurrentImage } =
+// Single item form component
+function SingleDataForm({ 
+  extractedResult, 
+  index 
+}: { 
+  extractedResult: ExtractedResult;
+  index?: number;
+}) {
+  const { setExtractedData, resetExtractedData, clearImages, extractedData: allExtractedData } =
     useAppStore();
   const [formData, setFormData] = useState<any>({});
   const [submitted, setSubmitted] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
   useEffect(() => {
-    if (extractedData?.data) {
-      setFormData(extractedData.data);
+    if (extractedResult?.data) {
+      setFormData(extractedResult.data);
     }
-  }, [extractedData]);
+  }, [extractedResult]);
 
-  if (!extractedData) return null;
+  if (!extractedResult) return null;
 
-  const { type, data } = extractedData;
+  const { type, data } = extractedResult;
 
   const handleReset = () => {
     resetExtractedData();
-    setCurrentImage(null);
+    clearImages();
     setFormData({});
     setSubmitted(false);
   };
 
   const handleUpdateData = (updates: any) => {
     setFormData({ ...formData, ...updates });
-    setExtractedData({
-      ...extractedData,
+    
+    // Update the specific item in the array if we have multiple items
+    if (typeof index === 'number' && Array.isArray(allExtractedData)) {
+      const newData = [...allExtractedData];
+      newData[index] = {
+        ...extractedResult,
+        data: { ...data, ...updates } as typeof data,
+      };
+      setExtractedData(newData);
+    } else {
+      // Fallback for single item (backwards compatibility)
+      setExtractedData([{
+        ...extractedResult,
       data: { ...data, ...updates } as typeof data,
-    });
+      }]);
+    }
   };
 
   // Type-specific form rendering
@@ -776,5 +795,41 @@ export function EnhancedDataForm() {
     default:
       return null;
   }
+}
+
+// Main wrapper component that handles multiple extracted data items
+export function EnhancedDataForm() {
+  const { extractedData } = useAppStore();
+
+  if (!extractedData || (Array.isArray(extractedData) && extractedData.length === 0)) {
+    return null;
+  }
+
+  // Handle array of extracted data (multiple images)
+  if (Array.isArray(extractedData)) {
+    return (
+      <div className="space-y-8">
+        {extractedData.map((result, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="bg-card/50 rounded-xl p-6 border border-border/50"
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-muted-foreground">
+                Result {index + 1} of {extractedData.length}
+              </h3>
+            </div>
+            <SingleDataForm extractedResult={result} index={index} />
+          </motion.div>
+        ))}
+      </div>
+    );
+  }
+
+  // Fallback for single item (backwards compatibility)
+  return <SingleDataForm extractedResult={extractedData} />;
 }
 

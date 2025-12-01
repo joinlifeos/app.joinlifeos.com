@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export default function Home() {
   const {
-    currentImage,
+    currentImages,
     isLoading,
     setIsLoading,
     setShowApiKeyModal,
@@ -20,6 +20,8 @@ export default function Home() {
     extractedData,
     settings,
     setShowSettings,
+    resetExtractedData,
+    addExtractedData,
   } = useAppStore();
 
   // Close settings modal when navigating to this page
@@ -33,7 +35,7 @@ export default function Home() {
   }, [setShowApiKeyModal]);
 
   const handleAnalyze = async () => {
-    if (!currentImage) return;
+    if (currentImages.length === 0) return;
 
     // Check API key
     const hasApiKey =
@@ -47,29 +49,39 @@ export default function Home() {
     }
 
     setIsLoading(true);
+    resetExtractedData();
+    
     try {
       // Import the extraction API
       const { extractFromImage, extractTextWithOCR, extractHostFromText } = await import('@/lib/api');
 
-      // Extract OCR text first (for fallback host extraction on events)
-      const ocrText = await extractTextWithOCR(currentImage);
+      // Process all images in parallel
+      const results = await Promise.all(
+        currentImages.map(async (image) => {
+          // Extract OCR text first (for fallback host extraction on events)
+          const ocrText = await extractTextWithOCR(image);
 
-      // Extract data using generic extraction API (classifies and extracts)
-      const result = await extractFromImage(currentImage, settings);
+          // Extract data using generic extraction API (classifies and extracts)
+          const result = await extractFromImage(image, settings);
 
-      // Fallback: try OCR extraction for host if missing on events
-      if (result.type === 'event') {
-        const eventData = result.data as any;
-        if (!eventData.host && ocrText) {
-          const hostFromOCR = extractHostFromText(ocrText);
-          if (hostFromOCR) {
-            eventData.host = hostFromOCR;
-            result.data = eventData;
+          // Fallback: try OCR extraction for host if missing on events
+          if (result.type === 'event') {
+            const eventData = result.data as any;
+            if (!eventData.host && ocrText) {
+              const hostFromOCR = extractHostFromText(ocrText);
+              if (hostFromOCR) {
+                eventData.host = hostFromOCR;
+                result.data = eventData;
+              }
+            }
           }
-        }
-      }
 
-      setExtractedData(result);
+          return result;
+        })
+      );
+
+      // Add all results to extracted data
+      results.forEach(result => addExtractedData(result));
     } catch (error) {
       console.error('Analysis failed:', error);
       alert(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -126,7 +138,7 @@ export default function Home() {
           <EnhancedUploadArea />
 
           <AnimatePresence mode="wait" initial={false}>
-            {currentImage && !extractedData && (
+            {currentImages.length > 0 && extractedData.length === 0 && (
               <motion.div
                 key="analyze-button"
                 initial={{ opacity: 0, y: 10 }}
@@ -159,7 +171,7 @@ export default function Home() {
                           className="flex items-center gap-2"
           >
                           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Analyzing...
+                          Analyzing {currentImages.length} image{currentImages.length !== 1 ? 's' : ''}...
                         </motion.span>
                       ) : (
                         <motion.span
@@ -169,7 +181,7 @@ export default function Home() {
                           exit={{ opacity: 0 }}
                           className="flex items-center gap-2"
                         >
-                          Analyze Screenshot
+                          Analyze {currentImages.length} Screenshot{currentImages.length !== 1 ? 's' : ''}
                         </motion.span>
                       )}
                     </AnimatePresence>
@@ -178,7 +190,7 @@ export default function Home() {
               </motion.div>
             )}
 
-            {extractedData && (
+            {extractedData.length > 0 && (
               <motion.div
                 key="data-form"
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
