@@ -11,14 +11,16 @@ import { TaskForm } from '@/components/todo/task-form';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
 import { useAppStore } from '@/lib/store';
 import { useTodoStore } from '@/lib/todo-store';
-import { 
-  isGmailAuthenticated, 
-  initiateGmailAuth, 
+import {
+  isGmailAuthenticated,
+  initiateGmailAuth,
   storeAuth,
-  pullTasksFromGmail 
+  pullTasksFromGmail
 } from '@/lib/gmail';
+import { fetchLinkedInMessages, convertLinkedInToTasks } from '@/lib/linkedin';
 import type { Task } from '@/lib/types';
 import confetti from 'canvas-confetti';
+import { Linkedin } from 'lucide-react';
 
 export default function LifeSyncPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -77,7 +79,7 @@ export default function LifeSyncPage() {
         alert('Please configure your API key in settings first to use AI-powered task extraction.');
         return;
       }
-      
+
       // Initiate OAuth flow
       initiateGmailAuth();
       return;
@@ -93,7 +95,7 @@ export default function LifeSyncPage() {
     setIsPullingTasks(true);
     try {
       const tasks = await pullTasksFromGmail(settings, undefined, 10, true);
-      
+
       if (tasks.length === 0) {
         alert('No tasks found in your Gmail. Try adjusting the search query or check if you have any unread emails with task-related keywords.');
         return;
@@ -126,6 +128,47 @@ export default function LifeSyncPage() {
       alert(`Error: ${error instanceof Error ? error.message : 'Failed to pull tasks from Gmail'}`);
     } finally {
       setIsPullingTasks(false);
+    }
+  };
+
+  const [isPullingLinkedIn, setIsPullingLinkedIn] = useState(false);
+
+  const handlePullFromLinkedIn = async () => {
+    setIsPullingLinkedIn(true);
+    try {
+      const messages = await fetchLinkedInMessages();
+      const tasks = convertLinkedInToTasks(messages);
+
+      if (tasks.length === 0) {
+        alert('No new unread messages found on LinkedIn.');
+        return;
+      }
+
+      let addedCount = 0;
+      for (const task of tasks) {
+        addTask({
+          title: task.title,
+          description: task.description,
+          dueDate: task.dueDate,
+          priority: task.priority,
+          completed: false,
+        });
+        addedCount++;
+      }
+
+      confetti({
+        particleCount: 50,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#0077b5', '#00a0dc', '#ffffff'], // LinkedIn colors
+      });
+
+      alert(`Successfully added ${addedCount} message${addedCount > 1 ? 's' : ''} from LinkedIn!`);
+    } catch (error) {
+      console.error('Failed to pull from LinkedIn:', error);
+      alert('Failed to pull messages from LinkedIn.');
+    } finally {
+      setIsPullingLinkedIn(false);
     }
   };
 
@@ -174,7 +217,7 @@ export default function LifeSyncPage() {
             autoAnimate={true}
             animationDuration={3}
           />
-          
+
           {/* Filters and Action Buttons */}
           <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
             <TaskFilters />
@@ -199,6 +242,30 @@ export default function LifeSyncPage() {
                     <>
                       <Mail className="h-4 w-4 mr-2" />
                       Pull from Gmail
+                    </>
+                  )}
+                </Button>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+              >
+                <Button
+                  onClick={handlePullFromLinkedIn}
+                  disabled={isPullingLinkedIn}
+                  variant="outline"
+                  className="border-border hover:border-[#0077b5]/50 hover:bg-[#0077b5]/10 text-foreground shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  {isPullingLinkedIn ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Checking...
+                    </>
+                  ) : (
+                    <>
+                      <Linkedin className="h-4 w-4 mr-2 text-[#0077b5]" />
+                      LinkedIn
                     </>
                   )}
                 </Button>
