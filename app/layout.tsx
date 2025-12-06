@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SideDockProvider } from "@/components/side-dock-provider";
+import { PostHogProvider } from "@/components/posthog-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +29,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SideDockProvider>
-          {children}
-        </SideDockProvider>
+        <PostHogProvider>
+          <SideDockProvider>
+            {children}
+          </SideDockProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

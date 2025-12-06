@@ -1,4 +1,4 @@
-export type ScreenshotType = 'event' | 'song' | 'video' | 'restaurant' | 'link' | 'social_post';
+export type ScreenshotType = 'event' | 'song' | 'video' | 'restaurant' | 'link' | 'social_post' | 'note';
 
 export interface EventData {
   title: string;
@@ -59,7 +59,14 @@ export interface SocialPostData {
   imageUrl?: string;
 }
 
-export type ExtractedData = EventData | SongData | VideoData | RestaurantData | LinkData | SocialPostData;
+export interface NoteData {
+  title: string;
+  content: string;
+  tags?: string[];
+  source?: string;
+}
+
+export type ExtractedData = EventData | SongData | VideoData | RestaurantData | LinkData | SocialPostData | NoteData;
 
 export interface ExtractedResult {
   type: ScreenshotType;

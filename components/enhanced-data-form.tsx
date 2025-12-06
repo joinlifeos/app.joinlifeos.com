@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useAppStore } from '@/lib/store';
-import type { ExtractedResult, EventData, SongData, VideoData, RestaurantData, LinkData, SocialPostData } from '@/lib/types';
+import type { ExtractedResult, EventData, SongData, VideoData, RestaurantData, LinkData, SocialPostData, NoteData } from '@/lib/types';
 import { generateICS, downloadICS } from '@/lib/api';
 import {
   initiateGoogleAuth,
@@ -14,17 +14,17 @@ import {
   createGoogleCalendarEvent,
   formatEventForGoogleCalendar,
 } from '@/lib/google-calendar';
-import { Calendar, RotateCcw, CheckCircle2, LogOut, Loader2, Music, Video, MapPin, Link as LinkIcon, MessageSquare } from 'lucide-react';
+import { Calendar, RotateCcw, CheckCircle2, LogOut, Loader2, Music, Video, MapPin, Link as LinkIcon, MessageSquare, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
 import { ActionButtons } from './action-buttons';
 
 // Single item form component
-function SingleDataForm({ 
-  extractedResult, 
-  index 
-}: { 
+function SingleDataForm({
+  extractedResult,
+  index
+}: {
   extractedResult: ExtractedResult;
   index?: number;
 }) {
@@ -53,7 +53,7 @@ function SingleDataForm({
 
   const handleUpdateData = (updates: any) => {
     setFormData({ ...formData, ...updates });
-    
+
     // Update the specific item in the array if we have multiple items
     if (typeof index === 'number' && Array.isArray(allExtractedData)) {
       const newData = [...allExtractedData];
@@ -66,7 +66,7 @@ function SingleDataForm({
       // Fallback for single item (backwards compatibility)
       setExtractedData([{
         ...extractedResult,
-      data: { ...data, ...updates } as typeof data,
+        data: { ...data, ...updates } as typeof data,
       }]);
     }
   };
@@ -222,10 +222,10 @@ function SingleDataForm({
               id="location"
               value={eventFormData.location || ''}
               onChange={(e) => handleUpdateData({ location: e.target.value })}
-                className={cn(
-                  'bg-input border-border focus:border-primary focus:ring-primary/20 transition-all duration-200',
-                  focusedField === 'location' && 'ring-2 ring-primary/20'
-                )}
+              className={cn(
+                'bg-input border-border focus:border-primary focus:ring-primary/20 transition-all duration-200',
+                focusedField === 'location' && 'ring-2 ring-primary/20'
+              )}
               onFocus={() => setFocusedField('location')}
               onBlur={() => setFocusedField(null)}
             />
@@ -673,6 +673,111 @@ function SingleDataForm({
     );
   };
 
+  const renderNoteForm = () => {
+    const noteData = data as NoteData;
+    const noteFormData = formData as Partial<NoteData>;
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
+        className="mt-10 pt-10 border-t border-border"
+      >
+        <motion.h2
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-2xl font-semibold text-foreground mb-8 flex items-center gap-3"
+        >
+          <FileText className="h-6 w-6 text-primary" />
+          Note / Knowledge
+        </motion.h2>
+
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              value={noteFormData.title || ''}
+              onChange={(e) => handleUpdateData({ title: e.target.value })}
+              className={cn(
+                'bg-input border-border focus:border-primary focus:ring-primary/20 transition-all duration-200',
+                focusedField === 'title' && 'ring-2 ring-primary/20'
+              )}
+              onFocus={() => setFocusedField('title')}
+              onBlur={() => setFocusedField(null)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="content">Content</Label>
+            <Textarea
+              id="content"
+              value={noteFormData.content || ''}
+              onChange={(e) => handleUpdateData({ content: e.target.value })}
+              rows={12}
+              className={cn(
+                'bg-input border-border focus:border-primary focus:ring-primary/20 resize-none transition-all duration-200 font-mono text-sm',
+                focusedField === 'content' && 'ring-2 ring-primary/20'
+              )}
+              onFocus={() => setFocusedField('content')}
+              onBlur={() => setFocusedField(null)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="source">Source (Optional)</Label>
+              <Input
+                id="source"
+                value={noteFormData.source || ''}
+                onChange={(e) => handleUpdateData({ source: e.target.value })}
+                className={cn(
+                  'bg-input border-border focus:border-primary focus:ring-primary/20 transition-all duration-200',
+                  focusedField === 'source' && 'ring-2 ring-primary/20'
+                )}
+                onFocus={() => setFocusedField('source')}
+                onBlur={() => setFocusedField(null)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tags">Tags (comma separated)</Label>
+              <Input
+                id="tags"
+                value={noteFormData.tags?.join(', ') || ''}
+                onChange={(e) => handleUpdateData({ tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+                placeholder="recipe, article, ideas"
+                className={cn(
+                  'bg-input border-border focus:border-primary focus:ring-primary/20 transition-all duration-200',
+                  focusedField === 'tags' && 'ring-2 ring-primary/20'
+                )}
+                onFocus={() => setFocusedField('tags')}
+                onBlur={() => setFocusedField(null)}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <ActionButtons type={type} data={data} />
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={handleReset}
+                className="border-border hover:border-primary/50 hover:bg-muted transition-all duration-200"
+              >
+                <RotateCcw className="mr-2 h-5 w-5" />
+                Start Over
+              </Button>
+            </motion.div>
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
   const renderSocialPostForm = () => {
     const socialData = data as SocialPostData;
     const socialFormData = formData as Partial<SocialPostData>;
@@ -792,6 +897,8 @@ function SingleDataForm({
       return renderLinkForm();
     case 'social_post':
       return renderSocialPostForm();
+    case 'note':
+      return renderNoteForm();
     default:
       return null;
   }

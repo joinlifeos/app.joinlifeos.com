@@ -20,8 +20,9 @@ Types to classify:
 - restaurant: Restaurant menus, reviews, location markers, food delivery apps, restaurant listings, restaurant posts (TikTok, Instagram, etc.), restaurant info with location and contact information visible
 - link: Browser URLs, link previews, website screenshots with URLs visible
 - social_post: Social media posts (Twitter/X, Instagram, Facebook, LinkedIn, etc.), platform-specific UI elements; if it's a social media post but not a song, restaurant, event, video, or link, it should be classified as social_post
+- note: Informational content, articles, recipes, instructions, diagrams, text snippets, or anything that doesn't fit into event, song, video, restaurant, or social_post.
 
-Return ONLY valid JSON: {"type": "event" | "song" | "video" | "restaurant" | "link" | "social_post", "confidence": 0.0-1.0}`;
+Return ONLY valid JSON: {"type": "event" | "song" | "video" | "restaurant" | "link" | "social_post" | "note", "confidence": 0.0-1.0}`;
 
   let promptText = 'Classify this screenshot image.\n\n';
   if (ocrText) {
@@ -102,9 +103,9 @@ Return ONLY valid JSON: {"type": "event" | "song" | "video" | "restaurant" | "li
     const errorData = await response.json().catch(() => ({}));
     throw new Error(
       errorData.error?.message ||
-        errorData.error ||
-        errorData.message ||
-        `HTTP ${response.status}: ${response.statusText}`
+      errorData.error ||
+      errorData.message ||
+      `HTTP ${response.status}: ${response.statusText}`
     );
   }
 
@@ -131,6 +132,7 @@ Return ONLY valid JSON: {"type": "event" | "song" | "video" | "restaurant" | "li
     'restaurant',
     'link',
     'social_post',
+    'note',
   ];
   if (!validTypes.includes(result.type)) {
     // Default to 'link' if classification fails

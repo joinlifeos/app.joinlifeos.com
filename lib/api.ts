@@ -6,6 +6,7 @@ import { extractVideoData } from './extractors/video-extractor';
 import { extractRestaurantData } from './extractors/restaurant-extractor';
 import { extractLinkData } from './extractors/link-extractor';
 import { extractSocialPostData } from './extractors/social-extractor';
+import { extractNoteData } from './extractors/note-extractor';
 
 /**
  * Generic extraction function that classifies the screenshot type
@@ -42,6 +43,9 @@ export async function extractFromImage(
       break;
     case 'social_post':
       data = await extractSocialPostData(imageDataUrl, ocrText, settings);
+      break;
+    case 'note':
+      data = await extractNoteData(imageDataUrl, ocrText, settings);
       break;
     default:
       // Fallback to link if unknown type
@@ -134,9 +138,9 @@ export async function extractEventFromImage(
     const errorData = await response.json().catch(() => ({}));
     throw new Error(
       errorData.error?.message ||
-        errorData.error ||
-        errorData.message ||
-        `HTTP ${response.status}: ${response.statusText}`
+      errorData.error ||
+      errorData.message ||
+      `HTTP ${response.status}: ${response.statusText}`
     );
   }
 
