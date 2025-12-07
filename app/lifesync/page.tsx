@@ -20,7 +20,7 @@ import {
 import { fetchLinkedInMessages, convertLinkedInToTasks } from '@/lib/linkedin';
 import type { Task } from '@/lib/types';
 import confetti from 'canvas-confetti';
-import { Linkedin } from 'lucide-react';
+import { Linkedin, CreditCard } from 'lucide-react';
 
 export default function LifeSyncPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -172,6 +172,23 @@ export default function LifeSyncPage() {
     }
   };
 
+  const handleSubscribe = async () => {
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to start subscription.');
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      alert('Failed to start subscription.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden" style={{ background: 'linear-gradient(to bottom right, oklch(0.08 0.06 270), oklch(0.09 0.07 265), oklch(0.07 0.06 275))' }}>
       {/* Starfield background */}
@@ -268,6 +285,20 @@ export default function LifeSyncPage() {
                       LinkedIn
                     </>
                   )}
+                </Button>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+              >
+                <Button
+                  onClick={handleSubscribe}
+                  variant="outline"
+                  className="border-border hover:border-primary/50 hover:bg-primary/10 text-foreground shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  <CreditCard className="h-4 w-4 mr-2 text-primary" />
+                  Upgrade (Early Bird $1/mo)
                 </Button>
               </motion.div>
               <motion.div
